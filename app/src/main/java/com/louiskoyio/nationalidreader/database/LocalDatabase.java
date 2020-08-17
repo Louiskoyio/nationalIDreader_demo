@@ -11,7 +11,7 @@ import com.louiskoyio.nationalidreader.models.Profile;
 
 
 @Database(entities = {
-        Profile.class}, version = 5)
+        Profile.class}, version = 8)
 
 
 public abstract class LocalDatabase extends RoomDatabase {

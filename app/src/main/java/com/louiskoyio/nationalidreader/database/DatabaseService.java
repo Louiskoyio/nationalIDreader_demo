@@ -19,4 +19,7 @@ public interface DatabaseService {
 
     @Query("Select * from profiles")
     List<Profile> getAllProfiles();
+
+    @Query("Select * from profiles where id=:id")
+    Profile getProfile(int id);
 }

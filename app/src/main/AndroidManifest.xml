@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.louiskoyio.nationalidreader">
 
-
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -12,13 +11,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ResultsActivity"></activity>
+        <activity android:name=".ProfileActivity"></activity>
+        <activity android:name=".ResultsActivity" />
         <activity android:name=".ViewProfilesActivity" />
-        <activity android:name=".CameraActivity"></activity>
+        <activity android:name=".CameraActivity" />
 
-        <meta-data
+ <!--       <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-            android:value="ocr,face" />
+            android:value="ocr,face" />-->
 
         <activity android:name=".MainActivity">
             <intent-filter>

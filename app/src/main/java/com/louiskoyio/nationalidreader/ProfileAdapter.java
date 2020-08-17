@@ -35,7 +35,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.CustomVi
     @Override
     public CustomViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         LayoutInflater layoutInflater = LayoutInflater.from(parent.getContext());
-        View view = layoutInflater.inflate(R.layout.save_profile, parent, false);
+        View view = layoutInflater.inflate(R.layout.profiles_list, parent, false);
 
         return new CustomViewHolder(view);
     }
@@ -43,20 +43,41 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.CustomVi
     @Override
     public void onBindViewHolder(CustomViewHolder holder, int position) {
 
-        Profile currentProfile = profiles.get(position);
+        final Profile currentProfile = profiles.get(position);
 
-        holder.mName.setText(currentProfile.getName());
+
+        String nameString="";
+        String[] nameArr = currentProfile.getName().split(" ");
+
+        for(String name:nameArr){
+            nameString = nameString + name + "\n";
+        }
+
+        holder.mName.setText(nameString);
         holder.mIDno.setText(currentProfile.getId_number());
+        holder.mDob.setText(currentProfile.getDob());
+        holder.mDistrict.setText(currentProfile.getDistrict_of_birth());
+        holder.mPoi.setText(currentProfile.getPlace_of_issue());
+        holder.mDoi.setText(currentProfile.getDoi());
+        holder.mGender.setText(currentProfile.getSex());
+
+
+
+
         String filename = currentProfile.getId_number() +".jpg";
 
         final File file = new File(context.getExternalFilesDir(null),filename);
         Bitmap faceBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
         holder.mFace.setImageBitmap(faceBitmap);
 
+        holder.mFace.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 
-
-
-
+                Intent intent = new Intent(context,ProfileActivity.class);
+                context.startActivity(intent.putExtra("id",currentProfile.getId()));
+            }
+        });
 
 
     }
@@ -64,15 +85,21 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.CustomVi
 
         public final View mView;
 
-        TextView mIDno, mName;
+        TextView mIDno, mName,mDob,mDistrict,mPoi,mDoi,mGender;
         ImageView mFace;
 
         CustomViewHolder(View itemView) {
             super(itemView);
             mView = itemView;
 
-            mName = mView.findViewById(R.id.txtName);
-            mIDno = mView.findViewById(R.id.txtIDno);
+            mName = mView.findViewById(R.id.name);
+            mIDno = mView.findViewById(R.id.idnum);
+            mDob = mView.findViewById(R.id.dob);
+            mDistrict = mView.findViewById(R.id.district);
+            mPoi = mView.findViewById(R.id.poi);
+            mDoi = mView.findViewById(R.id.doi);
+            mGender = mView.findViewById(R.id.sex);
+
             mFace = mView.findViewById(R.id.imgFace);
         }
     }
