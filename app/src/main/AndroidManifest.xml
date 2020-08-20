@@ -2,6 +2,9 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.louiskoyio.nationalidreader">
 
+    <uses-feature android:name="android.hardware.camera"
+        android:required="true" />
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
@@ -16,9 +19,9 @@
         <activity android:name=".ViewProfilesActivity" />
         <activity android:name=".CameraActivity" />
 
- <!--       <meta-data
+       <meta-data
             android:name="com.google.firebase.ml.vision.DEPENDENCIES"
-            android:value="ocr,face" />-->
+            android:value="ocr,face" />
 
         <activity android:name=".MainActivity">
             <intent-filter>

@@ -88,7 +88,6 @@ public class MainActivity extends AppCompatActivity {
     private Bitmap mBitmap, mFaceBitmap;
     private byte[] mBitmapByteArray;
     private Boolean rotated = false;
-    private int rotations = 0;
     private LocalDatabase localDatabase;
     private List<String> undesiredWords;
     private List<String> words;
@@ -132,8 +131,15 @@ public class MainActivity extends AppCompatActivity {
                 mBitmap = null;
                 mImageView.setImageDrawable(null);
                 imgFace.setImageDrawable(null);
-                txtName.setText("");
-                txtIdNumber.setText("");
+                txtName.setText(null);
+                txtIdNumber.setText(null);
+                txtDoB.setText(null);
+                txtDistrict.setText(null);
+                txtPoI.setText(null);
+                txtSex.setText(null);
+                txtDoI.setText(null);
+
+
                 rotated = false;
 
                 try {
@@ -238,130 +244,138 @@ public class MainActivity extends AppCompatActivity {
 
     private void saveProfile() {
 
-        final String name, idNumber,dob,sex,district,poi,doi;
+        final String name, idNumber, dob, sex, district, poi, doi;
 
         if (!txtName.getText().toString().isEmpty())
             name = txtName.getText().toString().trim().toUpperCase();
         else {
             name = "";
-            txtName.requestFocus();
-            txtName.setError("Name is empty");
         }
         if (!txtIdNumber.getText().toString().isEmpty())
             idNumber = txtIdNumber.getText().toString().trim().toUpperCase();
         else {
             idNumber = "";
-            txtName.requestFocus();
-            txtName.setError("ID number is empty");
         }
         if (!txtDoB.getText().toString().isEmpty())
             dob = txtDoB.getText().toString().trim().toUpperCase();
         else {
             dob = "";
-            txtDoB.requestFocus();
-            txtDoB.setError("DOB is empty");
         }
         if (!txtSex.getText().toString().isEmpty())
             sex = txtSex.getText().toString().trim().toUpperCase();
         else {
             sex = "";
-            txtSex.requestFocus();
-            txtSex.setError("Gender is empty");
         }
         if (!txtDistrict.getText().toString().isEmpty())
             district = txtDistrict.getText().toString().trim().toUpperCase();
         else {
             district = "";
-            txtDistrict.requestFocus();
-            txtDistrict.setError("District is empty");
         }
         if (!txtPoI.getText().toString().isEmpty())
             poi = txtPoI.getText().toString().trim().toUpperCase();
         else {
             poi = "";
-            txtPoI.requestFocus();
-            txtPoI.setError("Place of issue is empty");
         }
         if (!txtDoI.getText().toString().isEmpty())
             doi = txtDoI.getText().toString().trim().toUpperCase();
         else {
             doi = "";
-            txtDoI.requestFocus();
-            txtDoI.setError("Date of issue is empty");
         }
 
 
-        final int db_id = localDatabase.databaseService().getAllProfiles().size();
+        if (name.isEmpty()) {
+            txtName.requestFocus();
+            txtName.setError("Name is empty");
+        } else if (idNumber.isEmpty()) {
+            txtIdNumber.requestFocus();
+            txtIdNumber.setError("ID number is empty");
+        } else if (dob.isEmpty()) {
+            txtDoB.requestFocus();
+            txtDoB.setError("DOB is empty");
+        } else if (sex.isEmpty()) {
+            txtSex.requestFocus();
+            txtSex.setError("Field is empty");
+        } else if (district.isEmpty()) {
+            txtDistrict.requestFocus();
+            txtDistrict.setError("District is empty");
+        } else if (poi.isEmpty()) {
+            txtPoI.requestFocus();
+            txtPoI.setError("Place of issue is empty");
+        } else if (doi.isEmpty()) {
+            txtDoI.requestFocus();
+            txtDoI.setError("Date of issue is empty");
+        } else {
+            final int db_id = localDatabase.databaseService().getAllProfiles().size();
 
-        AlertDialog.Builder saveProfileDialogBuilder = new AlertDialog.Builder(MainActivity.this);
-        saveProfileDialogBuilder.setTitle("Confirm Details");
-        saveProfileDialogBuilder.setMessage("Save details?\nName:\t" + name + "\nID Number:\t" + idNumber);
-        saveProfileDialogBuilder.setCancelable(true);
-        saveProfileDialogBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                final Profile newProfile = new Profile();
-                newProfile.setName(name);
-                newProfile.setId_number(idNumber);
-                newProfile.setId(db_id);
-                newProfile.setDob(dob);
-                newProfile.setSex(sex);
-                newProfile.setDistrict_of_birth(district);
-                newProfile.setPlace_of_issue(poi);
-                newProfile.setDoi(doi);
+            AlertDialog.Builder saveProfileDialogBuilder = new AlertDialog.Builder(MainActivity.this);
+            saveProfileDialogBuilder.setTitle("Confirm Details");
+            saveProfileDialogBuilder.setMessage("Save details?\nName:\t" + name + "\nID Number:\t" + idNumber);
+            saveProfileDialogBuilder.setCancelable(true);
+            saveProfileDialogBuilder.setPositiveButton("YES", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    final Profile newProfile = new Profile();
+                    newProfile.setName(name);
+                    newProfile.setId_number(idNumber);
+                    newProfile.setId(db_id);
+                    newProfile.setDob(dob);
+                    newProfile.setSex(sex);
+                    newProfile.setDistrict_of_birth(district);
+                    newProfile.setPlace_of_issue(poi);
+                    newProfile.setDoi(doi);
 
-                Bitmap faceBitmap=null;
-                if(imgFace.getDrawable()!=null) {
-                    faceBitmap = ((BitmapDrawable) imgFace.getDrawable()).getBitmap();
-                }
+                    Bitmap faceBitmap = null;
+                    if (imgFace.getDrawable() != null) {
+                        faceBitmap = ((BitmapDrawable) imgFace.getDrawable()).getBitmap();
+                    }
 
-                if (faceBitmap != null) {
-                    final CallbackInterface callback = new CallbackInterface() {
-                        @Override
-                        public void done(Exception e) {
-                            if (e == null) {
-                                Log.d(TAG, "onImageSavedCallback: image saved!");
-                                newProfile.setHasImage(true);
-                                showToast("Face image saved");
-                            } else {
-                                Log.d(TAG, "onImageSavedCallback: error saving image: " + e.getMessage());
-                                newProfile.setHasImage(false);
-                                showToast("Error saving face image");
+                    if (faceBitmap != null) {
+                        final CallbackInterface callback = new CallbackInterface() {
+                            @Override
+                            public void done(Exception e) {
+                                if (e == null) {
+                                    Log.d(TAG, "onImageSavedCallback: image saved!");
+                                    newProfile.setHasImage(true);
+                                    showToast("Face image saved");
+                                } else {
+                                    Log.d(TAG, "onImageSavedCallback: error saving image: " + e.getMessage());
+                                    newProfile.setHasImage(false);
+                                    showToast("Error saving face image");
+                                }
                             }
-                        }
-                    };
+                        };
 
-                    ImageSaver imageSaver = new ImageSaver(
-                            faceBitmap,
-                            getApplicationContext().getExternalFilesDir(null),
-                            callback, (idNumber + ".jpg"));
+                        ImageSaver imageSaver = new ImageSaver(
+                                faceBitmap,
+                                getApplicationContext().getExternalFilesDir(null),
+                                callback, (idNumber + ".jpg"));
 
-                    imageSaver.run();
+                        imageSaver.run();
 
-                    localDatabase.databaseService().saveProfile(newProfile);
-                    showToast("Profile saved successfully!");
-                } else {
-                    newProfile.setHasImage(false);
-                  //  showToast("Error saving details. No image found");
-                    localDatabase.databaseService().saveProfile(newProfile);
+                        localDatabase.databaseService().saveProfile(newProfile);
+                        showToast("Profile saved successfully!");
+                    } else {
+                        newProfile.setHasImage(false);
+                        //  showToast("Error saving details. No image found");
+                        localDatabase.databaseService().saveProfile(newProfile);
 
-                    List<Profile> profiles= localDatabase.databaseService().getAllProfiles();
-                    int id = profiles.get(((localDatabase.databaseService().getAllProfiles().size())-1)).getId();
+                        List<Profile> profiles = localDatabase.databaseService().getAllProfiles();
+                        int id = profiles.get(((localDatabase.databaseService().getAllProfiles().size()) - 1)).getId();
 
-                    startActivity(new Intent(MainActivity.this,ProfileActivity.class).putExtra("id",id));
+                        startActivity(new Intent(MainActivity.this, ProfileActivity.class).putExtra("id", id));
+                    }
                 }
-            }
-        });
-        saveProfileDialogBuilder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialog, int which) {
-                dialog.cancel();
+            });
+            saveProfileDialogBuilder.setNegativeButton("NO", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
 
-            }
-        });
-        AlertDialog saveProfileAlert = saveProfileDialogBuilder.create();
-        saveProfileAlert.show();
-
+                }
+            });
+            AlertDialog saveProfileAlert = saveProfileDialogBuilder.create();
+            saveProfileAlert.show();
+        }
     }
 
     private void showToast(String message) {
@@ -492,7 +506,7 @@ public class MainActivity extends AppCompatActivity {
                                     }
                                     mImageView.setImageBitmap(mBitmap);
                                     mProgressDialog.setMessage("Processing text.");
-                                        getNameAndIDNumber(blocks);
+                                        getData(blocks);
                                 }
 
                             }
@@ -527,16 +541,13 @@ public class MainActivity extends AppCompatActivity {
         return resizedBitmap;
     }
 
-    public void getNameAndIDNumber(List<Text.TextBlock> blocks) {
+    public void getData(List<Text.TextBlock> blocks) {
 
         mProgressDialog.setMessage("Processing text..");
 
         List<String> allLines = new ArrayList<>();
-        List<String> allValidLines = new ArrayList<>();
         List<String> allInvalidLines = new ArrayList<>();
-        List<String> predictedResults = new ArrayList<>();
         List<String> allNumbers = new ArrayList<>();
-        List<String> validNumbers = new ArrayList<>();
         List<String> allWords = new ArrayList<>();
         List<String> allDates = new ArrayList<>();
 
@@ -548,10 +559,6 @@ public class MainActivity extends AppCompatActivity {
             predictedName = "";
             predictedIDNumber = "";
         }
-
-
-
-        List<String> invalidLines = new ArrayList<>();
 
         for (int i = 0; i < blocks.size(); i++) {
             List<Text.Line> lines = blocks.get(i).getLines();
@@ -568,17 +575,20 @@ public class MainActivity extends AppCompatActivity {
                     allWords.add(word);
 
 
+                    if (StringUtils.isNumeric(word) && !containsDot(word) && word.length()==8) {
+                        allNumbers.add(word);
+                    }
+
 
                     // if the number has a dot i.e is a date
                     if (containsDot(word)&&containsNumber(word)) {
-                        allNumbers.add(word);
+
                         allDates.add(lines.get(j).getText());
                     }
                     //give the line a temp id
-                    String lineId = i + "-" + j;
 
                     // check if word is valid
-                    if (isWordValid(word) && !invalidLines.contains(lineId)) {
+                /*    if (isWordValid(word) && !invalidLines.contains(lineId)) {
                         String lineToBeAdded = lines.get(j).getText();
                         if (!allValidLines.contains(lineToBeAdded))
                             allValidLines.add(lineToBeAdded);
@@ -588,7 +598,7 @@ public class MainActivity extends AppCompatActivity {
                     if (!isWordValid(word) && !invalidLines.contains(lineId)) {
                         invalidLines.add(i + "-" + j);
                         allInvalidLines.add(lines.get(j).getText());
-                    }
+                    }*/
 
                 }
             }
@@ -599,96 +609,30 @@ public class MainActivity extends AppCompatActivity {
             allLinesString = allLinesString + line + "\n";
         }
 
-        int linesWithNumbers = 0;
-        int linesWithWords = 0;
-        for (String line : allValidLines) {
+        List<String> linesWithNumbers = new ArrayList<>();
 
-
-            if (containsNumber(line)) {
-
-                String newLine = cleanupNumber(line);
-
-                if (newLine.length() <= 8 && linesWithNumbers < 1 && !containsDot(line)) {
-                    allValidLinesString = allValidLinesString + newLine + "\n";
-                    predictedResults.add(newLine);
-                    linesWithNumbers++;
-                }
-            } else {
-                if (linesWithWords < 1 && !allInvalidLines.contains(line) && lineWithMoreThanTwoWords(line)) {
-                    allValidLinesString = allValidLinesString + line + "\n";
-                    predictedResults.add(line);
-
-                    linesWithWords++;
-                }
-            }
-        }
         for (String line : allInvalidLines) {
             allInvalidLinesString = allInvalidLinesString + line + "\n";
         }
 
 
-        if (allLines.size() > 0) {
-            int indexOfName = 0,indexOfNumber =0;
-
-            for(String prediction: predictedResults){
-                if(!StringUtils.isNumeric(prediction))
-                    indexOfName = predictedResults.indexOf(prediction);
-                else
-                    indexOfNumber = predictedResults.indexOf(prediction);
-
-            }
-
-            if (allNumbers.size() > 0) {
-                validNumbers = validNumbers(allNumbers);
-
-                if (validNumbers.size() > 0) {
-                    predictedIDNumber = validNumbers.get(0);
-                } else {
-                    predictedIDNumber = predictedResults.get(indexOfNumber);
-                    if (!StringUtils.isNumeric(predictedIDNumber))
-                        predictedIDNumber = "";
-                }
-            }
-
-            if (predictedResults.size() > 0) {
-                predictedName = predictedResults.get(indexOfName);
-            } else {
-                predictedName = "";
-            }
             mProgressDialog.setMessage("Processing text...");
-            txtName.setText(predictedName);
-            txtIdNumber.setText(predictedIDNumber);
-            txtSex.setText(getGender(allWords));
-            txtDistrict.setText(getPoIAndDistrict(allLines).get(0));
-            txtPoI.setText(getPoIAndDistrict(allLines).get(1));
 
-
-            List<String> dobDoI=getDoBAndDoI(allDates);
-            String dob = dobDoI.get(0);
-            if(dob!=null)
-                txtDoB.setText(dob);
-
-            String doi = dobDoI.get((dobDoI.size()-1));
-            if(doi!=null)
-                txtDoI.setText(doi);
+            getName(allLines);
+            getIdDNumber(allNumbers);
+            getGender(allWords);
+            getPoIAndDistrict(allLines);
+            getDoBAndDoI(allDates);
 
             allInfo.setText("ALL:\n" + allLinesString);
             allValidInfo.setText("VALID:\n" + allDates);
-            removedInfo.setText("REMOVED:\n" + allInvalidLines);
+            removedInfo.setText("ALL NUMBERS:\n" + allNumbers);
 
             processFace();
 
-//            mProgressDialog.dismiss();
-
         }
-    }
 
 
-
-    private void tryFace(){
-        mBitmap = mImageView.getDrawingCache();
-
-    }
 
 
     private void processFace(){
@@ -696,31 +640,26 @@ public class MainActivity extends AppCompatActivity {
 
         FaceDetector detector;
         FaceDetectorOptions options = new FaceDetectorOptions.Builder()
+                .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
                 .enableTracking()
                 .build();
 
-        InputImage image = InputImage.fromBitmap(mBitmap, 0);
 
         mBitmapByteArray = BitmapUtils.convertBitmapToNv21Bytes(mBitmap);
 
-        detector = FaceDetection.getClient(options);
-
-       /* InputImage image = InputImage.fromByteArray(
+        InputImage image1 = InputImage.fromByteArray(
                 mBitmapByteArray,
-               480,
-                360,
+                /* image width */mBitmap.getWidth(),
+                /* image height */mBitmap.getHeight(),
                 0,
                 InputImage.IMAGE_FORMAT_NV21 // or IMAGE_FORMAT_YV12
-        );*/
+        );
 
 
+        detector = FaceDetection.getClient(options);
 
 
-
-       // Frame outputFrame = new Frame.Builder().setBitmap(mBitmap).build();
-       // SparseArray<Face> faces = detector.detect(outputFrame);
-
-        Task<List<Face>> result = detector.process(image)
+        Task<List<Face>> result = detector.process(image1)
                 .addOnSuccessListener(
                         new OnSuccessListener<List<Face>>() {
                             @Override
@@ -738,16 +677,7 @@ public class MainActivity extends AppCompatActivity {
                             }
                         });
 
-
-
-
-
-
-
     }
-
-
-
 
     private Bitmap getFace(List<Face> faces) {
         mProgressDialog.setMessage("Detecting face...");
@@ -756,7 +686,6 @@ public class MainActivity extends AppCompatActivity {
             mFaceBitmap = null;
             faceFound = false;
             mProgressDialog.dismiss();
-            displayResults();
 
             showToast("No faces detected");
         } else {
@@ -785,7 +714,7 @@ public class MainActivity extends AppCompatActivity {
 
                     imgFace.setImageBitmap(faceCrop);
                     mProgressDialog.dismiss();
-                    saveRecognizedFace(faceCrop);
+                  //  saveRecognizedFace(faceCrop);
                 }else{
                     processFace();
                 }
@@ -817,23 +746,9 @@ public class MainActivity extends AppCompatActivity {
         mFaceBitmap = faceBitmap;
         faceFound = true;
 
-        displayResults();
-
-
     }
 
-    public void displayResults() {
-        mProgressDialog.dismiss();
-        mImageView.setImageBitmap(mBitmap);
 
-        if (mFaceBitmap != null)
-            imgFace.setImageBitmap(mFaceBitmap);
-
-        txtName.setText(predictedName);
-        txtIdNumber.setText(predictedIDNumber);
-
-
-    }
 
     public Boolean isWordValid(String word) {
         Boolean valid = null;
@@ -969,7 +884,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    private String getGender(List<String> allWords){
+    private void getGender(List<String> allWords){
         String gender="";
         MyString maleCheck = new MyString("MALE");
         MyString femaleCheck = new MyString("FEMALE");
@@ -979,18 +894,16 @@ public class MainActivity extends AppCompatActivity {
         for(String word: allWords){
             if(maleCheck.isSimilar(word)){
                 gender = "MALE";
-                return gender;
             }else if(femaleCheck.isSimilar(word)){
                 gender = "FEMALE";
-                return gender;
             }
         }
 
-        return gender;
+
+        txtSex.setText(gender);
     }
 
-    private List<String> getDoBAndDoI(List<String> allDates){
-        List<String> dates = new ArrayList<>();
+    private void getDoBAndDoI(List<String> allDates){
         List<String> cleanedDates = new ArrayList<>();
         List<String> formattedDates = new ArrayList<>();
 
@@ -1003,13 +916,72 @@ public class MainActivity extends AppCompatActivity {
             formattedDates.add(convertToProperDateFormat(cleanedDate));
         }
 
+        if(formattedDates.size()>0) {
+            String dob = formattedDates.get(0);
+            txtDoB.setText(dob);
+        }
+        if(formattedDates.size()>1) {
+            String doi = formattedDates.get(formattedDates.size()-1);
+            txtDoI.setText(doi);
+        }
 
 
-        return formattedDates;
+
+
     }
 
-    private List<String> getPoIAndDistrict(List<String> allLines){
-        List<String> results = new ArrayList<>();
+    public String getWordsOnly(String line){
+        char[] textArray = line.toCharArray();
+
+        List<Character> removedNumbers = new ArrayList<>();
+        for (Character character : textArray) {
+            if (Character.isAlphabetic(character))
+                removedNumbers.add(character);
+
+        }
+
+        StringBuilder sb = new StringBuilder();
+
+        for (Character ch : removedNumbers) {
+            sb.append(ch);
+        }
+
+
+        String cleanedLine = sb.toString();
+
+        return cleanedLine;
+
+
+    }
+
+    private void getName(List<String> allLines) {
+        String name = null;
+
+        MyString nameCheck = new MyString("FULL NAMES");
+
+        for (int i = 0; i < allLines.size(); i++) {
+            String line = allLines.get(i);
+
+            if (nameCheck.isSimilar(line)) {
+                name = allLines.get((i + 1));
+            }
+
+            if (name != null)
+                txtName.setText(name);
+
+        }
+    }
+
+    private void getIdDNumber(List<String> allNumbers){
+
+
+        if(allNumbers.size()>0)
+            txtIdNumber.setText(allNumbers.get(0));
+
+
+    }
+
+    private void getPoIAndDistrict(List<String> allLines){
         String district = null,poi=null;
 
         MyString districtCheck = new MyString("DISTRICT OF BIRTH");
@@ -1025,12 +997,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         if(district!=null)
-            results.add(district);
+            txtDistrict.setText(district);
         if(poi!=null)
-            results.add(poi);
-
-
-        return results;
+            txtPoI.setText(poi);
     }
 
 

@@ -1,5 +1,6 @@
 package com.louiskoyio.nationalidreader;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.FileProvider;
@@ -9,6 +10,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -21,17 +23,24 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.google.android.gms.tasks.OnFailureListener;
+import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.android.gms.vision.Frame;
-import com.google.android.gms.vision.face.Face;
-import com.google.android.gms.vision.face.FaceDetector;
+import com.google.mlkit.vision.common.InputImage;
+import com.google.mlkit.vision.face.Face;
+import com.google.mlkit.vision.face.FaceDetection;
+import com.google.mlkit.vision.face.FaceDetector;
+import com.google.mlkit.vision.face.FaceDetectorOptions;
 import com.louiskoyio.nationalidreader.database.LocalDatabase;
 import com.louiskoyio.nationalidreader.models.Profile;
+import com.louiskoyio.nationalidreader.utilities.BitmapUtils;
 import com.louiskoyio.nationalidreader.utilities.ImageSaver;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
-import static com.louiskoyio.nationalidreader.MainActivity.REQUEST_TAKE_PHOTO;
 
 public class ProfileActivity extends AppCompatActivity {
 
@@ -41,6 +50,7 @@ public class ProfileActivity extends AppCompatActivity {
     private Button home,profiles;
     private ProgressDialog mProgressDialog;
     private ImageView imgFace;
+    private byte[] mBitmapByteArray;
     private Bitmap mBitmap,mFaceBitmap;
     private TextView txtName, txtIdNumber,txtSex,txtDoB,txtDistrict,txtPoI,txtDoI;
     private LocalDatabase localDatabase;
@@ -214,40 +224,77 @@ public class ProfileActivity extends AppCompatActivity {
         mProgressDialog.setMessage("Processing Image. Please wait ...");
         mProgressDialog.show();
 
-        FaceDetector detector = new FaceDetector.Builder(ProfileActivity.this)
-                .setProminentFaceOnly(true)
+        FaceDetector detector;
+        FaceDetectorOptions options = new FaceDetectorOptions.Builder()
+                .setPerformanceMode(FaceDetectorOptions.PERFORMANCE_MODE_FAST)
+                .enableTracking()
                 .build();
 
-        Bitmap source = getBitmap(new File(currentPhotoPath));
-        Frame outputFrame = new Frame.Builder().setBitmap(source).build();
-        detector.detect(outputFrame);
-        SparseArray<Face> faces = detector.detect(outputFrame);
 
-        mFaceBitmap = getFace(faces);
+        mBitmapByteArray = BitmapUtils.convertBitmapToNv21Bytes(mBitmap);
+
+        InputImage image1 = InputImage.fromByteArray(
+                mBitmapByteArray,
+                /* image width */mBitmap.getWidth(),
+                /* image height */mBitmap.getHeight(),
+                0,
+                InputImage.IMAGE_FORMAT_NV21 // or IMAGE_FORMAT_YV12
+        );
+
+
+        detector = FaceDetection.getClient(options);
+
+
+        Task<List<com.google.mlkit.vision.face.Face>> result = detector.process(image1)
+                .addOnSuccessListener(
+                        new OnSuccessListener<List<com.google.mlkit.vision.face.Face>>() {
+                            @Override
+                            public void onSuccess(List<Face> faces) {
+                                mFaceBitmap = getFace(faces);
+                                detector.close();
+                            }
+                        })
+                .addOnFailureListener(
+                        new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                // Task failed with an exception
+                                detector.close();
+                            }
+                        });
+
 
     }
 
-    private Bitmap getFace(SparseArray<Face> faces) {
+
+    private Bitmap getFace(List<com.google.mlkit.vision.face.Face> faces) {
         mProgressDialog.setMessage("Detecting face...");
         // Task completed successfully
         if (faces.size() == 0) {
             mFaceBitmap = null;
-
             mProgressDialog.dismiss();
+
         } else {
-            Bitmap source = mBitmap;
+
 
             for (int i = 0; i < faces.size(); ++i) {
-                Face face = faces.get(i);
+                com.google.mlkit.vision.face.Face face = faces.get(i);
+                Rect rect = face.getBoundingBox();
+
+
 
                 if (face != null) {
-                    Bitmap faceBitmap = Bitmap.createBitmap(source,
-                            (int) face.getPosition().x,
-                            (int) face.getPosition().y,
-                            (int) face.getWidth(),
-                            (int) face.getHeight());
+                    File file = new File(currentPhotoPath);
+                    Bitmap bitmap = getBitmap(file);
+                    Bitmap faceCrop = Bitmap.createBitmap(
+                            bitmap,
+                            rect.left,
+                            rect.top,
+                            rect.width(),
+                            rect.height());
 
-                    saveRecognizedFace(faceBitmap);
+                    imgFace.setImageBitmap(faceCrop);
+                    saveRecognizedFace(faceCrop);
                 }else{
                     processFace();
                 }
@@ -298,9 +345,4 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        startActivity(new Intent(ProfileActivity.this, MainActivity.class));
-        // optional depending on your needs super.onBackPressed();
-    }
 }

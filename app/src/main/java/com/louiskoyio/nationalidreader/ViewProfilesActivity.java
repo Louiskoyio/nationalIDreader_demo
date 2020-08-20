@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.louiskoyio.nationalidreader.database.LocalDatabase;
@@ -40,5 +41,11 @@ public class ViewProfilesActivity extends AppCompatActivity {
         adapter = new ProfileAdapter(profiles, ViewProfilesActivity.this);
         adapter.notifyDataSetChanged();
         mRecyclerView.setAdapter(adapter);
+    }
+
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(ViewProfilesActivity.this, MainActivity.class));
+        // optional depending on your needs super.onBackPressed();
     }
 }
