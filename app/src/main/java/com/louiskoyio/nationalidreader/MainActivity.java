@@ -59,6 +59,7 @@ import com.google.mlkit.vision.text.TextRecognizer;
 import com.louiskoyio.nationalidreader.database.LocalDatabase;
 import com.louiskoyio.nationalidreader.models.Profile;
 import com.louiskoyio.nationalidreader.utilities.BitmapUtils;
+import com.louiskoyio.nationalidreader.utilities.DataSender;
 import com.louiskoyio.nationalidreader.utilities.ImageSaver;
 
 import java.io.File;
@@ -320,6 +321,7 @@ public class MainActivity extends AppCompatActivity {
                     newProfile.setId(db_id);
                     newProfile.setDob(dob);
                     newProfile.setSex(sex);
+                    newProfile.setSynced(false);
                     newProfile.setDistrict_of_birth(district);
                     newProfile.setPlace_of_issue(poi);
                     newProfile.setDoi(doi);
@@ -360,10 +362,15 @@ public class MainActivity extends AppCompatActivity {
                         localDatabase.databaseService().saveProfile(newProfile);
 
                         List<Profile> profiles = localDatabase.databaseService().getAllProfiles();
-                        int id = profiles.get(((localDatabase.databaseService().getAllProfiles().size()) - 1)).getId();
+                        long id = profiles.get(((localDatabase.databaseService().getAllProfiles().size()) - 1)).getId();
 
                         startActivity(new Intent(MainActivity.this, ProfileActivity.class).putExtra("id", id));
                     }
+
+
+                    // send to api
+                    new DataSender(MainActivity.this,newProfile).sendProfileToApi();
+
                 }
             });
             saveProfileDialogBuilder.setNegativeButton("NO", new DialogInterface.OnClickListener() {

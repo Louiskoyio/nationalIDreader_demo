@@ -4,53 +4,48 @@ package com.louiskoyio.nationalidreader.models;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
-@Entity(
-        tableName = "profiles"
-)
-public class Profile {
+public class ProfileApi {
 
-    @PrimaryKey
     private long id;
     private String name;
     private String id_number;
-    private String dob;
-    private String sex;
+    private String date_of_birth;
+    private String gender;
     private String district_of_birth;
     private String place_of_issue;
-    private String doi;
-    private Boolean hasImage;
-    private Boolean synced;
+    private String date_of_issue;
+    private byte[] img;
 
-    public Boolean getSynced() {
-        return synced;
+    public String getDate_of_birth() {
+        return date_of_birth;
     }
 
-    public void setSynced(Boolean synced) {
-        this.synced = synced;
+    public void setDate_of_birth(String date_of_birth) {
+        this.date_of_birth = date_of_birth;
     }
 
-    public Boolean getHasImage() {
-        return hasImage;
+    public String getGender() {
+        return gender;
     }
 
-    public void setHasImage(Boolean hasImage) {
-        this.hasImage = hasImage;
+    public void setGender(String gender) {
+        this.gender = gender;
     }
 
-    public String getDob() {
-        return dob;
+    public String getDate_of_issue() {
+        return date_of_issue;
     }
 
-    public void setDob(String dob) {
-        this.dob = dob;
+    public void setDate_of_issue(String date_of_issue) {
+        this.date_of_issue = date_of_issue;
     }
 
-    public String getSex() {
-        return sex;
+    public byte[] getImg() {
+        return img;
     }
 
-    public void setSex(String sex) {
-        this.sex = sex;
+    public void setImg(byte[] img) {
+        this.img = img;
     }
 
     public String getDistrict_of_birth() {
@@ -69,19 +64,12 @@ public class Profile {
         this.place_of_issue = place_of_issue;
     }
 
-    public String getDoi() {
-        return doi;
-    }
-
-    public void setDoi(String doi) {
-        this.doi = doi;
-    }
 
     public long getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(long id) {
         this.id = id;
     }
 
