@@ -15,7 +15,7 @@ import retrofit2.http.Path;
 
 public interface ApiService {
 
-    @POST("/api/late_record/")
+    @POST("/employee/new/")
     Call<ProfileApi> addProfile(@Body ProfileApi profile);
 
     @GET("employees/{id}/")

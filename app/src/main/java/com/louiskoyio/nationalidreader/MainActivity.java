@@ -56,8 +56,11 @@ import com.google.mlkit.vision.face.FaceDetectorOptions;
 import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
+import com.louiskoyio.nationalidreader.database.ApiService;
 import com.louiskoyio.nationalidreader.database.LocalDatabase;
+import com.louiskoyio.nationalidreader.database.RetrofitClient;
 import com.louiskoyio.nationalidreader.models.Profile;
+import com.louiskoyio.nationalidreader.models.ProfileApi;
 import com.louiskoyio.nationalidreader.utilities.BitmapUtils;
 import com.louiskoyio.nationalidreader.utilities.DataSender;
 import com.louiskoyio.nationalidreader.utilities.ImageSaver;
@@ -69,6 +72,10 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
@@ -82,6 +89,7 @@ public class MainActivity extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 100;
     private String currentPhotoPath;
     private Boolean faceFound = false;
+    ApiService apiService;
     public String predictedName;
     public String predictedIDNumber;
     private LinearLayout  resultLayout;
@@ -110,6 +118,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         localDatabase = LocalDatabase.getInstance(this);
+        apiService = RetrofitClient.getClient(MainActivity.this).create(ApiService.class);
 
         txtIdNumber = findViewById(R.id.txtIDno);
         txtName = findViewById(R.id.txtName);
@@ -326,10 +335,28 @@ public class MainActivity extends AppCompatActivity {
                     newProfile.setPlace_of_issue(poi);
                     newProfile.setDoi(doi);
 
+                    ProfileApi apiFormatProfile = new ProfileApi();
+
+                    apiFormatProfile.setId_number(idNumber);
+                    apiFormatProfile.setName(name);
+                    apiFormatProfile.setDate_of_birth(dob);
+                    apiFormatProfile.setGender(sex);
+                    apiFormatProfile.setDistrict_of_birth(district);
+                    apiFormatProfile.setPlace_of_issue(poi);
+                    apiFormatProfile.setDate_of_issue(doi);
+
+
+
                     Bitmap faceBitmap = null;
                     if (imgFace.getDrawable() != null) {
                         faceBitmap = ((BitmapDrawable) imgFace.getDrawable()).getBitmap();
+                       // apiFormatProfile.setImg(BitmapUtils.convertBitmapToNv21Bytes(faceBitmap));
                     }
+
+
+
+
+
 
                     if (faceBitmap != null) {
                         final CallbackInterface callback = new CallbackInterface() {
@@ -368,8 +395,23 @@ public class MainActivity extends AppCompatActivity {
                     }
 
 
+                    apiService.addProfile(apiFormatProfile).enqueue(new Callback<ProfileApi>() {
+                        @Override
+                        public void onResponse(Call<ProfileApi> call, Response<ProfileApi> response) {
+                            if (response.isSuccessful()) {
+                                newProfile.setSynced(true);
+                                localDatabase.databaseService().updateProfile(newProfile);
+                            }
+                        }
+
+                        @Override
+                        public void onFailure(Call<ProfileApi> call, Throwable t) {
+
+                        }
+                    });
+
                     // send to api
-                    new DataSender(MainActivity.this,newProfile).sendProfileToApi();
+                    //new DataSender(MainActivity.this,newProfile,faceBitmap).sendProfileToApi();
 
                 }
             });

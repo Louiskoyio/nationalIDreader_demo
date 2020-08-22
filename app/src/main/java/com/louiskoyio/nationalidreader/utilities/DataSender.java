@@ -24,13 +24,15 @@ public class DataSender {
     Profile profile;
     ProfileApi apiFormatProfile;
     LocalDatabase localDatabase;
+    Bitmap img;
 
-    public DataSender(Context context,Profile profile) {
+    public DataSender(Context context,Profile profile,Bitmap faceBitmap) {
         this.context = context;
         this.profile = profile;
         this.apiService = RetrofitClient.getClient(context).create(ApiService.class);
         this.apiFormatProfile = convertToApiFormat(profile);
         this.localDatabase = LocalDatabase.getInstance(context);
+        this.img=faceBitmap;
     }
 
     public void sendProfileToApi(){
@@ -53,6 +55,7 @@ public class DataSender {
     }
 
     public ProfileApi convertToApiFormat(Profile profile){
+
         ProfileApi apiFormatProfile = new ProfileApi();
 
         apiFormatProfile.setId_number(profile.getId_number());
@@ -62,20 +65,17 @@ public class DataSender {
         apiFormatProfile.setDistrict_of_birth(profile.getDistrict_of_birth());
         apiFormatProfile.setPlace_of_issue(profile.getPlace_of_issue());
         apiFormatProfile.setDate_of_issue(profile.getDoi());
-
         if(profile.getHasImage())
-            apiFormatProfile.setImg(setImage(profile.getId_number()));
+            apiFormatProfile.setImg(setImage());
 
 
         return apiFormatProfile;
 
     }
 
-    public byte[] setImage(String idNumber){
-        final File file = new File(context.getExternalFilesDir(null),idNumber);
-        Bitmap faceBitmap = BitmapFactory.decodeFile(file.getAbsolutePath());
+    public byte[] setImage(){
 
-        return BitmapUtils.convertBitmapToNv21Bytes(faceBitmap);
+        return BitmapUtils.convertBitmapToNv21Bytes(img);
 
     }
 
