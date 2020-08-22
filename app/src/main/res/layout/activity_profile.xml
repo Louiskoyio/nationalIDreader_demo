@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:orientation="vertical"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="8dp"
+        android:orientation="horizontal"
+        android:weightSum="100">
+        <Button
+            android:id="@+id/button_home"
+            android:text="home"
+            android:layout_margin="4dp"
+            android:background="@drawable/curved_button"
+            android:textColor="@color/white"
+            android:layout_weight="50"
+            android:layout_width="0dp"
+            android:minHeight="80dp"
+            android:layout_height="wrap_content" />
+
+        <Button
+            android:id="@+id/button_profiles"
+            android:text="view other profiles"
+            android:layout_margin="4dp"
+            android:background="@drawable/curved_button"
+            android:textColor="@color/white"
+            android:layout_weight="50"
+            android:layout_width="0dp"
+            android:minHeight="80dp"
+            android:layout_height="wrap_content" />
+    </LinearLayout>
+    <LinearLayout
+        android:background="@drawable/save_profile_card"
+        android:padding="8dp"
+        android:layout_marginTop="24dp"
+        android:weightSum="100"
+        android:layout_margin="2dp"
+        android:layout_width="wrap_content"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/faceInfo"
+            android:layout_width="match_parent"
+            android:layout_margin="4dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="@id/image_view"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_gravity="center"
+                android:id="@+id/imgFace"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                >
+
+            </ImageView>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_margin="4dp"
+            android:layout_height="200dp"
+            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/nameInfo"
+                android:weightSum="100"
+android:layout_margin="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:text="NAME"
+                    android:textSize="8sp"
+                    android:textColor="@android:color/darker_gray"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+                <TextView
+                    app:layout_constraintBottom_toBottomOf="@id/image_view"
+                    android:inputType="text"
+                    android:id="@+id/txtName"
+                    android:textAllCaps="true"
+                    android:layout_width="0dp"
+                    android:layout_weight="80"
+                    android:textSize="8sp"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+
+            </LinearLayout>
+            <LinearLayout
+                android:weightSum="100"
+android:layout_margin="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:textSize="8sp"
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:text="ID NO."
+                    android:textColor="@android:color/darker_gray"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+
+                <TextView
+                    android:inputType="number"
+                    android:textSize="8sp"
+                    android:id="@+id/txtIDno"
+                    android:layout_width="0dp"
+                    android:layout_weight="80"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:weightSum="100"
+android:layout_margin="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:textSize="8sp"
+                    android:layout_width="0dp"
+                    android:layout_weight="20"                        android:text="SEX"
+                    android:textColor="@android:color/darker_gray"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+
+                <TextView
+                    android:inputType="text"
+                    android:textSize="8sp"
+                    android:id="@+id/txtSex"
+                    android:layout_width="0dp"
+                    android:layout_weight="80"                        android:text=""
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:weightSum="100"
+android:layout_margin="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:textSize="8sp"
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:text="DATE OF BIRTH"
+                    android:textColor="@android:color/darker_gray"
+                    android:textStyle="bold"
+                    android:layout_gravity="bottom"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+
+                <TextView
+                    android:inputType="text"                        android:textSize="8sp"
+                    android:id="@+id/txtDoB"
+                    android:layout_gravity="bottom"
+                    android:layout_width="0dp"
+                    android:layout_weight="80"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:weightSum="100"
+android:layout_margin="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:textSize="8sp"
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:text="DISTRICT OF BIRTH"
+                    android:textColor="@android:color/darker_gray"
+                    android:textStyle="bold"
+                    android:layout_gravity="bottom"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+
+                <TextView
+                    android:inputType="text"                        android:textSize="8sp"
+                    android:id="@+id/txtDistrict"
+                    android:layout_gravity="bottom"
+                    android:layout_width="0dp"
+                    android:layout_weight="80"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+
+
+            </LinearLayout>
+            <LinearLayout
+                android:weightSum="100"
+android:layout_margin="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:textSize="8sp"
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:text="PLACE OF ISSUE"
+                    android:textColor="@android:color/darker_gray"
+                    android:textStyle="bold"
+                    android:layout_gravity="bottom"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+
+                <TextView
+                    android:inputType="text"                        android:textSize="8sp"
+                    android:id="@+id/txtPoI"
+                    android:layout_gravity="bottom"
+                    android:layout_width="0dp"
+                    android:layout_weight="80"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:weightSum="100"
+android:layout_margin="2dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <TextView
+                    android:textSize="8sp"
+                    android:layout_width="0dp"
+                    android:layout_weight="20"
+                    android:text="DATE OF ISSUE"
+                    android:textColor="@android:color/darker_gray"
+                    android:textStyle="bold"
+                    android:layout_gravity="bottom"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+
+                <TextView
+                    android:inputType="text"                        android:textSize="8sp"
+                    android:id="@+id/txtDateOfIssue"
+                    android:layout_gravity="bottom"
+                    android:layout_width="0dp"
+                    android:layout_weight="80"
+                    android:text=""
+                    android:textColor="@android:color/black"
+                    android:textStyle="bold"
+                    android:layout_height="wrap_content"
+                    >
+
+                </TextView>
+
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+</LinearLayout>
