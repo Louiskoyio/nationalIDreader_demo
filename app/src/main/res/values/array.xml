@@ -31,4 +31,12 @@
         <item>@color/magenta</item>
         <item>@color/black</item>
     </array>
+
+    <array name="idTypes">
+        <item>National ID</item>
+        <item>Passport</item>
+        <item>Driving Licence</item>
+
+    </array>
+
 </resources>

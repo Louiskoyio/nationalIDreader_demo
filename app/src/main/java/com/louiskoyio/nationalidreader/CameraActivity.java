@@ -1,21 +1,21 @@
 package com.louiskoyio.nationalidreader;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.FragmentTransaction;
-
 import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+
 import androidx.annotation.NonNull;
-import com.google.android.material.snackbar.Snackbar;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.FragmentTransaction;
+
+import com.google.android.material.snackbar.Snackbar;
 
 
 public class CameraActivity extends AppCompatActivity implements CameraActivityInterface {
@@ -23,7 +23,6 @@ public class CameraActivity extends AppCompatActivity implements CameraActivityI
     private static final int REQUEST_CODE = 1234;
     public static String CAMERA_POSITION_FRONT;
     public static String CAMERA_POSITION_BACK;
-    public static String MAX_ASPECT_RATIO;
     private ProgressDialog mProgressDialog;
     //vars
     private boolean mPermissions;
@@ -65,13 +64,9 @@ public class CameraActivity extends AppCompatActivity implements CameraActivityI
     }
     /** Check if this device has a camera */
     private boolean checkCameraHardware(Context context) {
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
-            // this device has a camera
-            return true;
-        } else {
-            // no camera on this device
-            return false;
-        }
+        // this device has a camera
+        // no camera on this device
+        return context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA);
     }
 
     public void verifyPermissions(){
@@ -139,18 +134,12 @@ public class CameraActivity extends AppCompatActivity implements CameraActivityI
 
     @Override
     public boolean isCameraFrontFacing() {
-        if(mCameraOrientation.equals(CAMERA_POSITION_FRONT)){
-            return true;
-        }
-        return false;
+        return mCameraOrientation.equals(CAMERA_POSITION_FRONT);
     }
 
     @Override
     public boolean isCameraBackFacing() {
-        if(mCameraOrientation.equals(CAMERA_POSITION_BACK)){
-            return true;
-        }
-        return false;
+        return mCameraOrientation.equals(CAMERA_POSITION_BACK);
     }
 
     @Override
@@ -180,13 +169,17 @@ public class CameraActivity extends AppCompatActivity implements CameraActivityI
     }
 
     @Override
-    public void setTrashIconSize(int width, int height){
+    public void setTrashIconSize(int width, int height) {
         CameraFragment cameraFragment = (CameraFragment) getSupportFragmentManager().findFragmentByTag("Camera2");
         if (cameraFragment != null) {
-            if(cameraFragment.isVisible()){
+            if (cameraFragment.isVisible()) {
                 cameraFragment.setTrashIconSize(width, height);
             }
         }
     }
 
+    @Override
+    public void onBackPressed() {
+        startActivity(new Intent(CameraActivity.this, MainActivity.class));
+    }
 }

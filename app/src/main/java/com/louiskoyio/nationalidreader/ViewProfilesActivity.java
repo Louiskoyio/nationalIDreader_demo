@@ -1,17 +1,15 @@
 package com.louiskoyio.nationalidreader;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.DividerItemDecoration;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.content.Intent;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.louiskoyio.nationalidreader.database.LocalDatabase;
 import com.louiskoyio.nationalidreader.models.Profile;
 
-import java.util.Collections;
 import java.util.List;
 
 public class ViewProfilesActivity extends AppCompatActivity {
@@ -46,6 +44,5 @@ public class ViewProfilesActivity extends AppCompatActivity {
     @Override
     public void onBackPressed() {
         startActivity(new Intent(ViewProfilesActivity.this, MainActivity.class));
-        // optional depending on your needs super.onBackPressed();
     }
 }

@@ -1,10 +1,5 @@
 package com.louiskoyio.nationalidreader;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.content.FileProvider;
-
 import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -16,17 +11,19 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
-import android.util.SparseArray;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-import com.google.android.gms.vision.Frame;
 import com.google.mlkit.vision.common.InputImage;
 import com.google.mlkit.vision.face.Face;
 import com.google.mlkit.vision.face.FaceDetection;
@@ -96,7 +93,7 @@ public class ProfileActivity extends AppCompatActivity {
         Intent intent = getIntent();
         Bundle bundle = intent.getExtras();
         if(bundle!=null){
-            int profileID = bundle.getInt("id",0);
+            int profileID = bundle.getInt("camera_frame", 0);
 
             getDetails(profileID);
         }
@@ -333,7 +330,7 @@ public class ProfileActivity extends AppCompatActivity {
 
 
         finish();
-        startActivity(getIntent().putExtra("id",profile.getId()));
+        startActivity(getIntent().putExtra("camera_frame", profile.getId()));
 
 
     }

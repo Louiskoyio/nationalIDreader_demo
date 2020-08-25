@@ -5,11 +5,9 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.os.AsyncTask;
 import android.util.Log;
 import android.util.SparseArray;
-import android.view.View;
 
 import androidx.annotation.NonNull;
 
@@ -23,13 +21,11 @@ import com.google.mlkit.vision.text.Text;
 import com.google.mlkit.vision.text.TextRecognition;
 import com.google.mlkit.vision.text.TextRecognizer;
 import com.louiskoyio.nationalidreader.CallbackInterface;
-import com.louiskoyio.nationalidreader.MainActivity;
 import com.louiskoyio.nationalidreader.MyString;
 
 import org.apache.commons.lang3.StringUtils;
 
 import java.io.File;
-import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -199,7 +195,7 @@ public class NationalIDImageProcessor extends AsyncTask<Void, String, Bitmap> {
                         allNumbers.add(word);
                         allDates.add(lines.get(j).getText());
                     }
-                    //give the line a temp id
+                    //give the line a temp camera_frame
                     String lineId = i + "-" + j;
 
                     // check if word is valid
@@ -488,10 +484,7 @@ public class NationalIDImageProcessor extends AsyncTask<Void, String, Bitmap> {
             }
         }
 
-        if(i>0)
-            isAValidImage = true;
-        else
-            isAValidImage = false;
+        isAValidImage = i > 0;
 
         return isAValidImage;
 
@@ -525,11 +518,7 @@ public class NationalIDImageProcessor extends AsyncTask<Void, String, Bitmap> {
         }
 
 
-        if(fetchedWords.size()>8 && hasValidWords(fetchedWords)){
-            return true;
-        }else{
-            return false;
-        }
+        return fetchedWords.size() > 8 && hasValidWords(fetchedWords);
     }
 
 

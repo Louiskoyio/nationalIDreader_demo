@@ -1,26 +1,20 @@
 package com.louiskoyio.nationalidreader;
 
-import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.louiskoyio.nationalidreader.models.Profile;
 
 import java.io.File;
-import java.text.ParseException;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
 public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.CustomViewHolder>{
@@ -75,7 +69,7 @@ public class ProfileAdapter extends RecyclerView.Adapter<ProfileAdapter.CustomVi
             public void onClick(View v) {
 
                 Intent intent = new Intent(context,ProfileActivity.class);
-                context.startActivity(intent.putExtra("id",currentProfile.getId()));
+                context.startActivity(intent.putExtra("camera_frame", currentProfile.getId()));
             }
         });
 

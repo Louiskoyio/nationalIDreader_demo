@@ -8,8 +8,6 @@ import android.graphics.PointF;
 
 import com.google.android.gms.vision.face.Contour;
 import com.google.android.gms.vision.face.Face;
-import com.google.mlkit.vision.face.FaceContour;
-import com.google.mlkit.vision.face.FaceLandmark;
 
 import java.util.List;
 
@@ -69,11 +67,11 @@ public class FaceContourGraphic extends GraphicOverlay.Graphic {
             return;
         }
 
-        // Draws a circle at the position of the detected face, with the face's track id below.
+        // Draws a circle at the position of the detected face, with the face's track camera_frame below.
         float x = translateX(face.getPosition().x);
         float y = translateY(face.getPosition().y);
         canvas.drawCircle(x, y, FACE_POSITION_RADIUS, facePositionPaint);
-        canvas.drawText("id: " + face.getId(), x + ID_X_OFFSET, y + ID_Y_OFFSET, idPaint);
+        canvas.drawText("camera_frame: " + face.getId(), x + ID_X_OFFSET, y + ID_Y_OFFSET, idPaint);
 
         // Draws a bounding box around the face.
         float xOffset = scaleX(face.getWidth() / 2.0f);

@@ -18,17 +18,17 @@ public interface ApiService {
     @POST("/employee/new/")
     Call<ProfileApi> addProfile(@Body ProfileApi profile);
 
-    @GET("employees/{id}/")
-    Call<ProfileApi> getProfile(@Path("id") int id);
+    @GET("employees/{camera_frame}/")
+    Call<ProfileApi> getProfile(@Path("camera_frame") int id);
 
     @GET("employees/")
     Call<List<ProfileApi>> getAllProfiles();
 
-    @PATCH("employees/{id}/")
-    Call<ProfileApi> updateProfile(@Path("id") int id, @Body ProfileApi profile);
+    @PATCH("employees/{camera_frame}/")
+    Call<ProfileApi> updateProfile(@Path("camera_frame") int id, @Body ProfileApi profile);
 
-    @DELETE("employees/{id}/")
-    Call<ProfileApi> deleteProfile(@Path("id") int id, @Body ProfileApi profile);
+    @DELETE("employees/{camera_frame}/")
+    Call<ProfileApi> deleteProfile(@Path("camera_frame") int id, @Body ProfileApi profile);
 
 
 }

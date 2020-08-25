@@ -12,15 +12,12 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.graphics.ImageFormat;
 import android.graphics.Matrix;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.graphics.SurfaceTexture;
-import android.graphics.drawable.Drawable;
 import android.hardware.camera2.CameraAccessException;
 import android.hardware.camera2.CameraCaptureSession;
 import android.hardware.camera2.CameraCharacteristics;
@@ -33,25 +30,12 @@ import android.hardware.camera2.CaptureResult;
 import android.hardware.camera2.TotalCaptureResult;
 import android.hardware.camera2.params.MeteringRectangle;
 import android.hardware.camera2.params.StreamConfigurationMap;
-import android.media.ExifInterface;
 import android.media.Image;
 import android.media.ImageReader;
-import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.HandlerThread;
-import android.provider.MediaStore;
-import androidx.annotation.NonNull;
-import androidx.annotation.NonNull;
-
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.android.material.snackbar.Snackbar;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.core.content.ContextCompat;
-
 import android.util.Log;
 import android.util.Size;
 import android.util.SparseIntArray;
@@ -65,14 +49,15 @@ import android.widget.ImageButton;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.mlkit.vision.common.InputImage;
-import com.google.mlkit.vision.text.Text;
-import com.google.mlkit.vision.text.TextRecognition;
-import com.google.mlkit.vision.text.TextRecognizer;
-import com.louiskoyio.nationalidreader.database.LocalDatabase;
+import com.google.android.material.snackbar.Snackbar;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -359,7 +344,7 @@ public class CameraFragment extends Fragment implements
         final float scale = getContext().getResources().getDisplayMetrics().density;
 
         params.height = (int) (width * scale + 0.5f);
-        params.width = (int) (height * scale + 0.5f);;
+        params.width = (int) (height * scale + 0.5f);
         mTrashIcon.setLayoutParams(params);
     }
 
@@ -1078,14 +1063,14 @@ public class CameraFragment extends Fragment implements
         try {
             Log.d(TAG, "setUpCameraOutputs: called.");
             if (!mCameraActivityInterface.isCameraBackFacing() && !mCameraActivityInterface.isCameraFrontFacing()) {
-                Log.d(TAG, "setUpCameraOutputs: finding camera id's.");
+                Log.d(TAG, "setUpCameraOutputs: finding camera camera_frame's.");
                 findCameraIds();
             }
 
             CameraCharacteristics characteristics
                     = manager.getCameraCharacteristics(mCameraId);
 
-            Log.d(TAG, "setUpCameraOutputs: camera id: " + mCameraId);
+            Log.d(TAG, "setUpCameraOutputs: camera camera_frame: " + mCameraId);
 
             StreamConfigurationMap map = characteristics.get(
                     CameraCharacteristics.SCALER_STREAM_CONFIGURATION_MAP);
@@ -1094,15 +1079,15 @@ public class CameraFragment extends Fragment implements
             Size largest = null;
             float screenAspectRatio = (float)SCREEN_WIDTH / (float)SCREEN_HEIGHT;
             List<Size> sizes = new ArrayList<>();
-            for( Size size : Arrays.asList(map.getOutputSizes(ImageFormat.JPEG))){
+            for (Size size : map.getOutputSizes(ImageFormat.JPEG)) {
 
-                float temp = (float)size.getWidth() / (float)size.getHeight();
+                float temp = (float) size.getWidth() / (float) size.getHeight();
 
                 Log.d(TAG, "setUpCameraOutputs: temp: " + temp);
                 Log.d(TAG, "setUpCameraOutputs: w: " + size.getWidth() + ", h: " + size.getHeight());
 
-                if(temp > (screenAspectRatio - screenAspectRatio * ASPECT_RATIO_ERROR_RANGE )
-                        && temp < (screenAspectRatio + screenAspectRatio * ASPECT_RATIO_ERROR_RANGE)){
+                if (temp > (screenAspectRatio - screenAspectRatio * ASPECT_RATIO_ERROR_RANGE)
+                        && temp < (screenAspectRatio + screenAspectRatio * ASPECT_RATIO_ERROR_RANGE)) {
                     sizes.add(size);
                     Log.d(TAG, "setUpCameraOutputs: found a valid size: w: " + size.getWidth() + ", h: " + size.getHeight());
                 }
@@ -1458,9 +1443,10 @@ public class CameraFragment extends Fragment implements
         @Override
         protected void onPostExecute(Integer integer) {
             super.onPostExecute(integer);
-            if(integer == 1){
+            if(integer == 1) {
                 //displayCapturedImage();
-                startActivity(new Intent(getContext(),MainActivity.class).putExtra("newCapture",true));
+                String path = mActivity.getExternalFilesDirs(null) + "/temp_image.jpg";
+                startActivity(new Intent(getContext(), ResultsActivity.class).putExtra("currentPhotoPath", path));
                 //displayCapturedImage();
             }
             else{
